@@ -15,6 +15,7 @@ src/open_llm_vtuber/message_handler.py
 src/open_llm_vtuber/proxy_handler.py
 src/open_llm_vtuber/proxy_message_queue.py
 src/open_llm_vtuber/routes.py
+src/open_llm_vtuber/sentiment.py
 src/open_llm_vtuber/server.py
 src/open_llm_vtuber/service_context.py
 src/open_llm_vtuber/websocket_handler.py
@@ -37,6 +38,7 @@ src/open_llm_vtuber/agent/stateless_llm/ollama_llm.py
 src/open_llm_vtuber/agent/stateless_llm/openai_compatible_llm.py
 src/open_llm_vtuber/agent/stateless_llm/stateless_llm_interface.py
 src/open_llm_vtuber/agent/stateless_llm/stateless_llm_with_template.py
+src/open_llm_vtuber/agent/stateless_llm/vllm_llm.py
 src/open_llm_vtuber/asr/__init__.py
 src/open_llm_vtuber/asr/asr_factory.py
 src/open_llm_vtuber/asr/asr_interface.py

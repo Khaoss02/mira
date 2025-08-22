@@ -16,8 +16,6 @@ class StatelessLLMBaseConfig(I18nMixin):
             en="""The method to use for prompting the interruption signal.
             If the provider supports inserting system prompt anywhere in the chat memory, use "system". 
             Otherwise, use "user". You don't need to change this setting.""",
-            zh="""用于表示中断信号的方法(提示词模式)。如果LLM支持在聊天记忆中的任何位置插入系统提示词，请使用“system”。
-            否则，请使用“user”。您不需要更改此设置。""",
         ),
     }
 
@@ -34,18 +32,17 @@ class StatelessLLMWithTemplate(StatelessLLMBaseConfig):
     temperature: float = Field(1.0, alias="temperature")
 
     _OPENAI_COMPATIBLE_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
-        "base_url": Description(en="Base URL for the API endpoint", zh="API的URL端点"),
-        "llm_api_key": Description(en="API key for authentication", zh="API 认证密钥"),
+        "base_url": Description(en="Base URL for the API endpoint"),
+        "llm_api_key": Description(en="API key for authentication"),
         "organization_id": Description(
-            en="Organization ID for the API (Optional)", zh="组织 ID (可选)"
+            en="Organization ID for the API (Optional)"
         ),
         "project_id": Description(
-            en="Project ID for the API (Optional)", zh="项目 ID (可选)"
+            en="Project ID for the API (Optional)"
         ),
-        "model": Description(en="Name of the LLM model to use", zh="LLM 模型名称"),
+        "model": Description(en="Name of the LLM model to use"),
         "temperature": Description(
             en="What sampling temperature to use, between 0 and 2.",
-            zh="使用的采样温度，介于 0 和 2 之间。",
         ),
     }
 
@@ -66,18 +63,17 @@ class OpenAICompatibleConfig(StatelessLLMBaseConfig):
     temperature: float = Field(1.0, alias="temperature")
 
     _OPENAI_COMPATIBLE_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
-        "base_url": Description(en="Base URL for the API endpoint", zh="API的URL端点"),
-        "llm_api_key": Description(en="API key for authentication", zh="API 认证密钥"),
+        "base_url": Description(en="Base URL for the API endpoint"),
+        "llm_api_key": Description(en="API key for authentication"),
         "organization_id": Description(
-            en="Organization ID for the API (Optional)", zh="组织 ID (可选)"
+            en="Organization ID for the API (Optional)"
         ),
         "project_id": Description(
-            en="Project ID for the API (Optional)", zh="项目 ID (可选)"
+            en="Project ID for the API (Optional)"
         ),
-        "model": Description(en="Name of the LLM model to use", zh="LLM 模型名称"),
+        "model": Description(en="Name of the LLM model to use"),
         "temperature": Description(
             en="What sampling temperature to use, between 0 and 2.",
-            zh="使用的采样温度，介于 0 和 2 之间。",
         ),
     }
 
@@ -104,16 +100,13 @@ class OllamaConfig(OpenAICompatibleConfig):
     _OLLAMA_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
         "llm_api_key": Description(
             en="API key for authentication (defaults to 'default_api_key' for Ollama)",
-            zh="API 认证密钥 (Ollama 默认为 'default_api_key')",
         ),
         "keep_alive": Description(
             en="Keep the model loaded for this many seconds after the last request. "
             "Set to -1 to keep the model loaded indefinitely.",
-            zh="在最后一个请求之后保持模型加载的秒数。设置为 -1 以无限期保持模型加载。",
         ),
         "unload_at_exit": Description(
             en="Unload the model when the program exits.",
-            zh="是否在程序退出时卸载模型。",
         ),
     }
 
@@ -195,11 +188,11 @@ class ClaudeConfig(StatelessLLMBaseConfig):
 
     _CLAUDE_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
         "base_url": Description(
-            en="Base URL for Claude API", zh="Claude API 的API端点"
+            en="Base URL for Claude API"
         ),
-        "llm_api_key": Description(en="API key for authentication", zh="API 认证密钥"),
+        "llm_api_key": Description(en="API key for authentication"),
         "model": Description(
-            en="Name of the Claude model to use", zh="要使用的 Claude 模型名称"
+            en="Name of the Claude model to use"
         ),
     }
 
@@ -219,13 +212,45 @@ class LlamaCppConfig(StatelessLLMBaseConfig):
 
     _LLAMA_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
         "model_path": Description(
-            en="Path to the GGUF model file", zh="GGUF 模型文件路径"
+            en="Path to the GGUF model file"
         ),
     }
 
     DESCRIPTIONS: ClassVar[dict[str, Description]] = {
         **StatelessLLMBaseConfig.DESCRIPTIONS,
         **_LLAMA_DESCRIPTIONS,
+    }
+
+
+class VLLMConfig(StatelessLLMBaseConfig):
+    """Configuration for vLLM."""
+
+    model: str = Field(..., alias="model")
+    base_url: str | None = Field(None, alias="base_url")
+    llm_api_key: str | None = Field(None, alias="llm_api_key")
+    temperature: float = Field(1.0, alias="temperature")
+    max_tokens: int | None = Field(None, alias="max_tokens")
+    dtype: str | None = Field(None, alias="dtype")
+    gpu_memory_utilization: float | None = Field(None, alias="gpu_memory_utilization")
+    interrupt_method: Literal["system", "user"] = Field(
+        "system", alias="interrupt_method"
+    )
+
+    _VLLM_DESCRIPTIONS: ClassVar[dict[str, Description]] = {
+        "model": Description(en="Name or path of the vLLM model to use"),
+        "base_url": Description(en="Base URL for the vLLM API endpoint (for API mode)"),
+        "llm_api_key": Description(en="API key for authentication (for API mode)"),
+        "temperature": Description(
+            en="What sampling temperature to use, between 0 and 2."
+        ),
+        "max_tokens": Description(en="Maximum number of tokens to generate"),
+        "dtype": Description(en="Data type for the model (e.g., 'auto', 'float16')"),
+        "gpu_memory_utilization": Description(en="Fraction of GPU memory to use (0-1)"),
+    }
+
+    DESCRIPTIONS: ClassVar[dict[str, Description]] = {
+        **StatelessLLMBaseConfig.DESCRIPTIONS,
+        **_VLLM_DESCRIPTIONS,
     }
 
 
@@ -249,37 +274,40 @@ class StatelessLLMConfigs(I18nMixin, BaseModel):
     claude_llm: ClaudeConfig | None = Field(None, alias="claude_llm")
     llama_cpp_llm: LlamaCppConfig | None = Field(None, alias="llama_cpp_llm")
     mistral_llm: MistralConfig | None = Field(None, alias="mistral_llm")
+    vllm_llm: VLLMConfig | None = Field(None, alias="vllm_llm")
 
     DESCRIPTIONS: ClassVar[dict[str, Description]] = {
         "stateless_llm_with_template": Description(
-            en="Stateless LLM with Template", zh=""
+            en="Stateless LLM with Template"
         ),
         "openai_compatible_llm": Description(
             en="Configuration for OpenAI-compatible LLM providers",
-            zh="OpenAI兼容的语言模型提供者配置",
         ),
-        "ollama_llm": Description(en="Configuration for Ollama", zh="Ollama 配置"),
+        "ollama_llm": Description(en="Configuration for Ollama"),
         "lmstudio_llm": Description(
-            en="Configuration for LM Studio", zh="LM Studio 配置"
+            en="Configuration for LM Studio"
         ),
         "openai_llm": Description(
-            en="Configuration for Official OpenAI API", zh="官方 OpenAI API 配置"
+            en="Configuration for Official OpenAI API"
         ),
         "gemini_llm": Description(
-            en="Configuration for Gemini API", zh="Gemini API 配置"
+            en="Configuration for Gemini API"
         ),
         "mistral_llm": Description(
-            en="Configuration for Mistral API", zh="Mistral API 配置"
+            en="Configuration for Mistral API"
         ),
-        "zhipu_llm": Description(en="Configuration for Zhipu API", zh="Zhipu API 配置"),
+        "zhipu_llm": Description(en="Configuration for Zhipu API"),
         "deepseek_llm": Description(
-            en="Configuration for Deepseek API", zh="Deepseek API 配置"
+            en="Configuration for Deepseek API"
         ),
-        "groq_llm": Description(en="Configuration for Groq API", zh="Groq API 配置"),
+        "groq_llm": Description(en="Configuration for Groq API"),
         "claude_llm": Description(
-            en="Configuration for Claude API", zh="Claude API配置"
+            en="Configuration for Claude API"
         ),
         "llama_cpp_llm": Description(
-            en="Configuration for local Llama.cpp", zh="本地Llama.cpp配置"
+            en="Configuration for local Llama.cpp"
+        ),
+        "vllm_llm": Description(
+            en="Configuration for vLLM"
         ),
     }

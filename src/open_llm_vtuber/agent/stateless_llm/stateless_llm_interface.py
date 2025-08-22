@@ -31,8 +31,9 @@ class StatelessLLMInterface(metaclass=abc.ABCMeta):
 
         Parameters:
         - messages (List[Dict[str, Any]]): The list of messages to send to the API.
+          Each dict should have 'role' (e.g., 'user', 'assistant') and 'content'.
         - system (str, optional): System prompt to use for this completion.
-        - tools (List[Dict[str, str]], optional): List of tools to use for this completion.
+        - tools (List[Dict[str, Any]], optional): List of tools to use for this completion.
             - Each tool should follow the format:
             {
                 "name": "tool_name",

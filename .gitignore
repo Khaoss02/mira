@@ -1,5 +1,5 @@
 # ignore the user configuration file
-conf.yaml
+# conf.yaml
 
 # ignore non-default background images
 /backgrounds/*
@@ -33,7 +33,7 @@ lab.py
 conda
 
 # Sensitive data
-.env
+# .env
 api_keys.py
 src/open_llm_vtuber/llm/user_credentials.json
 

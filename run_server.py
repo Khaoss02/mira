@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import sys
 import atexit
@@ -15,6 +16,9 @@ from src.open_llm_vtuber.config_manager import Config, read_yaml, validate_confi
 
 os.environ["HF_HOME"] = str(Path(__file__).parent / "models")
 os.environ["MODELSCOPE_CACHE"] = str(Path(__file__).parent / "models")
+
+LLM_API_KEY = os.getenv("LLM_API_KEY")
+LLM_API_URL = os.getenv("LLM_API_URL")
 
 upgrade_manager = UpgradeManager()
 

@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Dict
 
 from loguru import logger
 
@@ -9,11 +9,12 @@ from .stateless_llm.stateless_llm_with_template import (
 from .stateless_llm.openai_compatible_llm import AsyncLLM as OpenAICompatibleLLM
 from .stateless_llm.ollama_llm import OllamaLLM
 from .stateless_llm.claude_llm import AsyncLLM as ClaudeLLM
+from .stateless_llm.vllm_llm import VLLMStatelessLLM  # Added import
 
 
 class LLMFactory:
     @staticmethod
-    def create_llm(llm_provider, **kwargs) -> Type[StatelessLLMInterface]:
+    def create_llm(llm_provider: str, **kwargs: Dict) -> StatelessLLMInterface:
         """Create an LLM based on the configuration.
 
         Args:
@@ -73,6 +74,13 @@ class LLMFactory:
                 base_url=kwargs.get("base_url"),
                 model=kwargs.get("model"),
                 llm_api_key=kwargs.get("llm_api_key"),
+            )
+        elif llm_provider == "vllm_llm":  # Added branch
+            return VLLMStatelessLLM(
+                model=kwargs.get("model"),
+                api_url=kwargs.get("base_url"),  # Map base_url to api_url
+                api_key=kwargs.get("llm_api_key"),
+                **kwargs  # Pass extras like temperature
             )
         else:
             raise ValueError(f"Unsupported LLM provider: {llm_provider}")
